@@ -192,7 +192,7 @@ def run():
             f"/{name}",
             f"/{name}",
             handle_request,
-            methods=["POST", "GET"],
+            methods=["POST", "GET", "PUT", "DELETE"],
         )
 
     # initialize and register API handlers
@@ -206,7 +206,11 @@ def run():
     
     @requires_auth  
     async def serve_canvas_file(canvas_id, filename):
-        return await canvas_serve_instance._serve_file(canvas_id, filename)
+        try:
+            return await canvas_serve_instance._serve_file(canvas_id, filename)
+        except Exception as e:
+            PrintStyle(font_color="red", padding=True).print(f"Canvas serve error: {str(e)}")
+            return Response(f"Canvas serve error: {str(e)}", status=500)
     
     webapp.add_url_rule(
         '/canvas_serve/<canvas_id>/<filename>',

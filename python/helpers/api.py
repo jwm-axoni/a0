@@ -71,14 +71,25 @@ class ApiHandler:
             return Response(response=error, status=500, mimetype="text/plain")
 
     # get context to run agent zero in
-    def get_context(self, ctxid: str):
+    def get_context(self, ctxid: str, allow_create: bool = True):
         with self.thread_lock:
             if not ctxid:
                 first = AgentContext.first()
                 if first:
                     return first
                 return AgentContext(config=initialize_agent())
+            
             got = AgentContext.get(ctxid)
             if got:
                 return got
-            return AgentContext(config=initialize_agent(), id=ctxid)
+            
+            # If context doesn't exist and creation is allowed, create it
+            if allow_create:
+                return AgentContext(config=initialize_agent(), id=ctxid)
+            else:
+                # If creation not allowed, fall back to first existing context
+                first = AgentContext.first()
+                if first:
+                    return first
+                # If no contexts exist at all, create a default one
+                return AgentContext(config=initialize_agent())

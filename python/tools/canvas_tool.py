@@ -85,7 +85,7 @@ class CanvasTool(Tool):
             "type": content_type,
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat(),
-            "file_path": content_file,
+            "file_path": os.path.abspath(content_file),
             "url": f"/canvas_serve/{canvas_id}/content.{file_extension}"
         }
         
@@ -415,3 +415,8 @@ class CanvasTool(Tool):
             "url": metadata.get("url", ""),
             "timestamp": time.time()
         }
+        
+        # Print debug information
+        PrintStyle(font_color="cyan", padding=True).print(
+            f"Canvas artifact '{metadata.get('title', 'Untitled')}' is ready at: {metadata.get('url', 'N/A')}"
+        )

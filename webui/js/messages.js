@@ -819,10 +819,7 @@ export function drawMessageCanvas(
               window.canvasManager.finishStreaming();
             }
 
-            // Hide the left sidebar when canvas is shown
-            window.toggleSidebar(false);
-
-            // Show the canvas with the artifact content
+            // Show the canvas with the artifact content (canvas will handle sidebar auto-close)
             console.log('Canvas: About to call window.canvasManager.show() - opening canvas');
             window.canvasManager.show();
             console.log('Canvas: window.canvasManager.show() called successfully');
@@ -921,8 +918,7 @@ function createArtifactPreviewCard(messageContainer, kvps) {
   openCanvasBtn.onclick = () => {
     if (window.canvasManager) {
       console.log('Canvas: About to call window.canvasManager.show() from artifact card open button');
-      // Hide the left sidebar when canvas is shown
-      window.toggleSidebar(false);
+      // Canvas will handle sidebar auto-close
       window.canvasManager.show();
       console.log('Canvas: window.canvasManager.show() called from artifact card open button');
       if (canvasUrl) {

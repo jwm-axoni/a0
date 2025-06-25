@@ -1,5 +1,6 @@
 import os
 import json
+import re
 from flask import request, Response, send_file
 from python.helpers.api import ApiHandler
 from python.helpers import files
@@ -13,6 +14,66 @@ class CanvasServe(ApiHandler):
     
     def __init__(self, app, lock):
         super().__init__(app, lock)
+
+    def _sanitize_html_content(self, content):
+        """Sanitize HTML content to prevent hex codes from being treated as URLs"""
+        try:
+            PrintStyle(font_color="cyan", padding=True).print("Starting content sanitization...")
+            original_content = content
+            
+            # Fix malformed src attributes with bare hex codes
+            content = re.sub(
+                r'src\s*=\s*["\']([a-fA-F0-9]{6})["\']',
+                r'src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="',
+                content
+            )
+            
+            # Fix CSS background properties with bare hex codes (including inline styles)
+            content = re.sub(
+                r'background:\s*([a-fA-F0-9]{6})(?=\s*[;}])',
+                r'background: #\1',
+                content
+            )
+            
+            # Fix CSS color properties with bare hex codes (including inline styles)
+            content = re.sub(
+                r'color:\s*([a-fA-F0-9]{6})(?=\s*[;}])',
+                r'color: #\1',
+                content
+            )
+            
+            # Fix CSS border-color properties with bare hex codes
+            content = re.sub(
+                r'border-color:\s*([a-fA-F0-9]{6})(?=\s*[;}])',
+                r'border-color: #\1',
+                content
+            )
+            
+            # Fix CSS border properties with bare hex codes
+            content = re.sub(
+                r'border:\s*([^;]*?\s+)([a-fA-F0-9]{6})(?=\s*[;}])',
+                r'border: \1#\2',
+                content
+            )
+            
+            # Remove any remaining malformed URLs that look like hex codes
+            content = re.sub(
+                r'https?://([a-fA-F0-9]{6})\b',
+                r'#\1',  # Convert to hex color
+                content
+            )
+            
+            # Log if content was modified
+            if content != original_content:
+                PrintStyle(font_color="blue", padding=True).print("Content was sanitized - hex codes fixed")
+            else:
+                PrintStyle(font_color="yellow", padding=True).print("No sanitization needed")
+            
+            return content
+            
+        except Exception as e:
+            PrintStyle(font_color="yellow", padding=True).print(f"Content sanitization warning: {str(e)}")
+            return content
 
     async def _serve_file(self, canvas_id, filename):
         """Internal method to serve canvas files"""
@@ -36,6 +97,26 @@ class CanvasServe(ApiHandler):
             
             # Determine MIME type based on file extension
             mime_type = self._get_mime_type(filename)
+            
+            # For HTML files, sanitize content to prevent hex code URL issues
+            if filename.lower().endswith('.html'):
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    
+                    # Sanitize the content
+                    sanitized_content = self._sanitize_html_content(content)
+                    
+                    # If content was modified, log it
+                    if sanitized_content != content:
+                        PrintStyle(font_color="blue", padding=True).print(f"Sanitized canvas content: {canvas_id}/{filename}")
+                    
+                    # Return sanitized content directly
+                    return Response(sanitized_content, mimetype=mime_type)
+                    
+                except Exception as e:
+                    PrintStyle(font_color="yellow", padding=True).print(f"Content sanitization failed: {str(e)}")
+                    # Fall back to serving file directly
             
             PrintStyle(font_color="green", padding=True).print(f"Serving canvas file: {canvas_id}/{filename}")
             

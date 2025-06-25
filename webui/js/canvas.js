@@ -24,6 +24,7 @@ class CanvasManager {
         this.currentType = null;
         this.currentRawCode = null;
         this.activeTab = 'preview';
+        this.isInitializing = true; // Prevent auto-opening during page load
         
         // Tab elements
         this.tabPreview = null;
@@ -153,6 +154,12 @@ class CanvasManager {
         if (this.container) {
             this.container.classList.remove('canvas-open');
         }
+        
+        // After a brief delay, allow auto-opening for new artifacts
+        setTimeout(() => {
+            this.isInitializing = false;
+            console.log('Canvas: Initialization period ended - auto-opening now allowed');
+        }, 3000); // 3 second grace period after page load
     }
 
     toggle() {
@@ -188,36 +195,51 @@ class CanvasManager {
             this.sidebarWasVisible = !leftPanel.classList.contains('hidden');
             console.log('  sidebarWasVisible:', this.sidebarWasVisible);
             
-            // Check if user has manually controlled the sidebar
-            // Wait a bit to ensure initialization is complete and user-controlled state is properly set
+            // Auto-close sidebar when canvas opens (desktop only)
+            // Always auto-close on desktop when canvas opens - user can manually re-open if needed
             setTimeout(() => {
-                const isUserControlled = leftPanel.hasAttribute('data-user-controlled');
-                console.log('  isUserControlled (after init):', isUserControlled);
+                const isCurrentlyVisible = !leftPanel.classList.contains('hidden');
+                const isDesktop = window.innerWidth > 768;
                 
-                // Auto-close if not user-controlled and on desktop (don't interfere with mobile)
-                const shouldAutoClose = !isUserControlled && window.innerWidth > 768;
-                console.log('  shouldAutoClose:', shouldAutoClose, '(width:', window.innerWidth, ', userControlled:', isUserControlled, ')');
+                console.log('  Canvas auto-close check:');
+                console.log('    isCurrentlyVisible:', isCurrentlyVisible);
+                console.log('    isDesktop:', isDesktop);
+                console.log('    window.innerWidth:', window.innerWidth);
+                
+                // Auto-close on desktop if sidebar is currently visible
+                const shouldAutoClose = isDesktop && isCurrentlyVisible;
+                console.log('    shouldAutoClose:', shouldAutoClose);
                 
                 if (shouldAutoClose && rightPanel) {
-                    console.log('  Before auto-close - leftPanel hidden:', leftPanel.classList.contains('hidden'));
+                    console.log('  Auto-closing sidebar for canvas');
                     
-                    // Auto-close the left panel when canvas opens (desktop only)
-                    leftPanel.classList.add('hidden');
-                    rightPanel.classList.add('expanded');
-                    
-                    console.log('  After auto-close - leftPanel hidden:', leftPanel.classList.contains('hidden'));
-                    console.log('  After auto-close - rightPanel expanded:', rightPanel.classList.contains('expanded'));
-                    
-                    // Also hide overlay if visible
-                    const overlay = document.getElementById('sidebar-overlay');
-                    if (overlay) {
-                        overlay.classList.remove('visible');
-                        console.log('  Overlay hidden');
+                    // Use the global toggleSidebar function to ensure consistent behavior
+                    if (window.toggleSidebar) {
+                        window.toggleSidebar(false);
+                    } else {
+                        // Fallback: direct manipulation
+                        leftPanel.classList.add('hidden');
+                        rightPanel.classList.add('expanded');
+                        
+                        // Update container classes for logo visibility
+                        const container = document.querySelector('.container');
+                        if (container) {
+                            container.classList.add('left-panel-collapsed');
+                            container.classList.remove('left-panel-visible');
+                        }
+                        
+                        // Also hide overlay if visible
+                        const overlay = document.getElementById('sidebar-overlay');
+                        if (overlay) {
+                            overlay.classList.remove('visible');
+                        }
                     }
+                    
+                    console.log('  Sidebar auto-closed for canvas');
                 } else {
-                    console.log('  Skipping auto-close: user-controlled sidebar or mobile device');
+                    console.log('  Skipping auto-close: mobile device or sidebar already hidden');
                 }
-            }, 200); // Increased delay to ensure proper initialization
+            }, 50); // Quick response for better UX
         } else {
             console.log('  Could not auto-close: panels not found');
         }
@@ -276,14 +298,27 @@ class CanvasManager {
         // Remove fullscreen body class if it exists
         document.body.classList.remove('canvas-fullscreen-active');
 
-        // Show the left sidebar when canvas is hidden
-        if (window.toggleSidebar) {
-            window.toggleSidebar(true);
-        } else {
-            console.warn('toggleSidebar function not available on window.');
-        }
+        // Conditionally restore the sidebar when canvas is hidden
+        // Only restore if it was visible before and user hasn't manually controlled it since
+        console.log('Canvas hide: checking if should restore sidebar');
+        console.log('  sidebarWasVisible:', this.sidebarWasVisible);
         
-        // Don't auto-restore left panel when canvas closes - let user control it manually
+        if (this.sidebarWasVisible && window.innerWidth > 768) {
+            console.log('  Restoring sidebar (was visible before canvas opened)');
+            if (window.toggleSidebar) {
+                window.toggleSidebar(true);
+            } else {
+                console.warn('toggleSidebar function not available on window.');
+                // Fallback: manually update container classes
+                const container = document.querySelector('.container');
+                if (container) {
+                    container.classList.remove('left-panel-collapsed');
+                    container.classList.add('left-panel-visible');
+                }
+            }
+        } else {
+            console.log('  Not restoring sidebar (was hidden before or mobile)');
+        }
         
         this.updateToggleButtonState();
     }
@@ -567,7 +602,7 @@ class CanvasManager {
         // Add error handling for failed loads
         this.canvasPreview.onerror = () => {
             console.error('Canvas: Failed to load URL:', resolvedUrl);
-            this.showError(`Canvas content not available. This may be due to port configuration or server connectivity issues.`);
+            this.showError(`Canvas content not available. Please check if the agent-zero server is running on the correct port.`);
         };
         
         // Also check for 404 errors by monitoring iframe load events
@@ -577,7 +612,7 @@ class CanvasManager {
                 const iframeDoc = this.canvasPreview.contentDocument || this.canvasPreview.contentWindow.document;
                 if (iframeDoc && iframeDoc.title.includes('Not Found')) {
                     console.warn('Canvas: Detected 404 error in iframe');
-                    this.showError(`Canvas file not found. Please check if the server is running on the correct port.`);
+                    this.showError(`Canvas file not found. Please check if the canvas artifact exists and the server is running.`);
                 }
             } catch (e) {
                 // Cross-origin restrictions prevent access, which is expected for external URLs
@@ -734,9 +769,11 @@ class CanvasManager {
     }
 
     // Public API for agent integration
-    createArtifact(content, type = 'html', title = 'Canvas') {
-        console.log('Canvas: createArtifact called', { type, title });
-        if (!this.isVisible) {
+    createArtifact(content, type = 'html', title = 'Canvas', autoShow = true) {
+        console.log('Canvas: createArtifact called', { type, title, autoShow });
+        
+        // Only auto-show if explicitly requested and not during page initialization
+        if (autoShow && !this.isVisible && !this.isInitializing) {
             this.show();
         }
         
@@ -757,9 +794,11 @@ class CanvasManager {
     }
 
     // Method to display canvas from URL (used by agent integration)
-    displayFromUrl(url, title = 'Canvas Artifact') {
-        console.log('Canvas: displayFromUrl called', { url, title });
-        if (!this.isVisible) {
+    displayFromUrl(url, title = 'Canvas Artifact', autoShow = true) {
+        console.log('Canvas: displayFromUrl called', { url, title, autoShow });
+        
+        // Only auto-show if explicitly requested and not during page initialization
+        if (autoShow && !this.isVisible && !this.isInitializing) {
             this.show();
         }
         
@@ -773,8 +812,9 @@ class CanvasManager {
     }
 
     // Enhanced update method for real-time streaming
-    streamContent(content, type = 'html', append = false) {
-        if (!this.isVisible) {
+    streamContent(content, type = 'html', append = false, autoShow = true) {
+        // Only auto-show if explicitly requested and not during page initialization
+        if (autoShow && !this.isVisible && !this.isInitializing) {
             this.show();
         }
         
@@ -787,11 +827,11 @@ class CanvasManager {
     }
     
     // Real-time streaming for canvas content
-    startStreaming(canvasId, title = 'Live Canvas', type = 'html') {
+    startStreaming(canvasId, title = 'Live Canvas', type = 'html', autoShow = true) {
         console.log('Canvas: Starting real-time streaming for', canvasId);
         
-        // Show canvas and set up for streaming
-        if (!this.isVisible) {
+        // Show canvas and set up for streaming - only if not during initialization
+        if (autoShow && !this.isVisible && !this.isInitializing) {
             this.show();
         }
         

@@ -40,17 +40,25 @@
 }
 
 .copy-link-button {
-    padding: 0.5rem 0.75rem;
-    background: none;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, rgba(45, 45, 45, 0.4) 0%, rgba(30, 30, 30, 0.6) 100%);
     border: none;
-    border-left: 1px solid var(--border-color);
+    border-left: 1px solid rgba(68, 68, 68, 0.4);
     color: var(--text-color);
     cursor: pointer;
-    transition: background-color 0.2s;
+    border-radius: 0 8px 8px 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.1));
 }
 
 .copy-link-button:hover {
-    background-color: var(--bg-color-tertiary);
+    background: linear-gradient(135deg, rgba(0, 195, 64, 0.2) 0%, rgba(0, 150, 50, 0.1) 100%);
+    border-left-color: rgba(0, 195, 64, 0.5);
+    color: #00e84a;
+    box-shadow: 0 4px 12px rgba(0, 195, 64, 0.2);
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 6px rgba(0, 195, 64, 0.3));
 }
 
 .copy-link-button i, 
@@ -85,18 +93,25 @@
 }
 
 .refresh-link-button {
-    padding: 0.5rem 0.75rem;
-    background: none;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, rgba(45, 45, 45, 0.4) 0%, rgba(30, 30, 30, 0.6) 100%);
     border: none;
-    border-left: 1px solid var(--border-color);
+    border-left: 1px solid rgba(68, 68, 68, 0.4);
     color: var(--text-color);
     cursor: pointer;
-    transition: background-color 0.2s;
+    border-radius: 0 8px 8px 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.1));
 }
 
 .refresh-link-button:hover {
-    background-color: var(--bg-color-tertiary);
-    color: var(--accent-color);
+    background: linear-gradient(135deg, rgba(255, 165, 0, 0.2) 0%, rgba(255, 140, 0, 0.1) 100%);
+    border-left-color: rgba(255, 165, 0, 0.5);
+    color: #ffa500;
+    box-shadow: 0 4px 12px rgba(255, 165, 0, 0.2);
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 6px rgba(255, 165, 0, 0.3));
 }
 
 .tunnel-link-persistence {
@@ -108,13 +123,24 @@
 }
 
 .btn-danger {
-    background-color: #dc3545;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
     color: white;
-    border: none;
+    border: 1px solid rgba(220, 53, 69, 0.4);
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-weight: 500;
+    box-shadow: 0 3px 12px rgba(220, 53, 69, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    filter: drop-shadow(0 0 4px rgba(220, 53, 69, 0.4));
 }
 
 .btn-danger:hover {
-    background-color: #bd2130;
+    background: linear-gradient(135deg, #bd2130 0%, #a71e2a 100%);
+    border-color: rgba(220, 53, 69, 0.6);
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+    transform: translateY(-1px);
+    filter: drop-shadow(0 0 8px rgba(220, 53, 69, 0.6));
 }
 
 .stop-tunnel-container {

@@ -34,6 +34,7 @@ function toggleSidebar(show) {
     const leftPanelEl = document.getElementById('left-panel');
     const rightPanelEl = document.getElementById('right-panel');
     const overlay = document.getElementById('sidebar-overlay');
+    const container = document.querySelector('.container');
     
     if (!leftPanelEl || !rightPanelEl) {
         console.error('Sidebar elements not found');
@@ -52,12 +53,23 @@ function toggleSidebar(show) {
     if (typeof show === 'boolean') {
         leftPanelEl.classList.toggle('hidden', !show);
         rightPanelEl.classList.toggle('expanded', !show);
+        // Update container classes for logo visibility
+        if (container) {
+            container.classList.toggle('left-panel-collapsed', !show);
+            container.classList.toggle('left-panel-visible', show);
+        }
         if (overlay) {
             overlay.classList.toggle('visible', show && isMobile());
         }
     } else {
         leftPanelEl.classList.toggle('hidden');
         rightPanelEl.classList.toggle('expanded');
+        // Update container classes for logo visibility
+        if (container) {
+            const isHidden = leftPanelEl.classList.contains('hidden');
+            container.classList.toggle('left-panel-collapsed', isHidden);
+            container.classList.toggle('left-panel-visible', !isHidden);
+        }
         if (overlay) {
             overlay.classList.toggle('visible', !leftPanelEl.classList.contains('hidden') && isMobile());
         }
@@ -94,25 +106,53 @@ function handleResize() {
     const leftPanelEl = document.getElementById('left-panel');
     const rightPanelEl = document.getElementById('right-panel');
     const overlay = document.getElementById('sidebar-overlay');
+    const container = document.querySelector('.container');
     
     if (!leftPanelEl || !rightPanelEl) return;
     
-    console.log('handleResize called - width:', window.innerWidth, 'isMobile:', isMobile());
+    const wasMobile = leftPanelEl.hasAttribute('data-was-mobile');
+    const currentIsMobile = isMobile();
     
-    if (isMobile()) {
-        leftPanelEl.classList.add('hidden');
-        rightPanelEl.classList.add('expanded');
-        if (overlay) overlay.classList.remove('visible');
-        // Clear user-controlled state on mobile since we force hide
-        leftPanelEl.removeAttribute('data-user-controlled');
-        console.log('Mobile mode: cleared user-controlled state');
+    console.log('handleResize called - width:', window.innerWidth, 'isMobile:', currentIsMobile, 'wasMobile:', wasMobile);
+    
+    // Only force changes and clear user-controlled state when switching between mobile/desktop
+    if (wasMobile !== currentIsMobile) {
+        console.log('Switching between mobile/desktop modes');
+        
+        if (currentIsMobile) {
+            leftPanelEl.classList.add('hidden');
+            rightPanelEl.classList.add('expanded');
+            // Update container classes for logo visibility
+            if (container) {
+                container.classList.add('left-panel-collapsed');
+                container.classList.remove('left-panel-visible');
+            }
+            if (overlay) overlay.classList.remove('visible');
+            leftPanelEl.setAttribute('data-was-mobile', 'true');
+            // Clear user-controlled state when forcing mobile layout
+            leftPanelEl.removeAttribute('data-user-controlled');
+            console.log('Mobile mode: forced hide, cleared user-controlled state');
+        } else {
+            leftPanelEl.classList.remove('hidden');
+            rightPanelEl.classList.remove('expanded');
+            // Update container classes for logo visibility
+            if (container) {
+                container.classList.remove('left-panel-collapsed');
+                container.classList.add('left-panel-visible');
+            }
+            if (overlay) overlay.classList.remove('visible');
+            leftPanelEl.removeAttribute('data-was-mobile');
+            // Clear user-controlled state when forcing desktop layout
+            leftPanelEl.removeAttribute('data-user-controlled');
+            console.log('Desktop mode: forced show, cleared user-controlled state');
+        }
     } else {
-        leftPanelEl.classList.remove('hidden');
-        rightPanelEl.classList.remove('expanded');
-        if (overlay) overlay.classList.remove('visible');
-        // Clear user-controlled state when switching to desktop since we force show
-        leftPanelEl.removeAttribute('data-user-controlled');
-        console.log('Desktop mode: cleared user-controlled state');
+        // Just update the mobile tracking attribute without changing user-controlled state
+        if (currentIsMobile) {
+            leftPanelEl.setAttribute('data-was-mobile', 'true');
+        } else {
+            leftPanelEl.removeAttribute('data-was-mobile');
+        }
     }
 }
 
@@ -126,18 +166,30 @@ function initializePageState() {
     // Ensure state is properly initialized for canvas interaction
     setTimeout(() => {
         const leftPanel = document.getElementById('left-panel');
-        if (leftPanel && !leftPanel.hasAttribute('data-user-controlled')) {
-            console.log('Page initialization: user-controlled state not set, ensuring clean state');
-            // Reset sidebar state on page load/refresh
-            leftPanel.removeAttribute('data-user-controlled');
+        if (leftPanel) {
+            // Only set initial state if no user-controlled attribute exists (fresh page load)
+            const hasUserControlled = leftPanel.hasAttribute('data-user-controlled');
+            console.log('Page initialization: user-controlled state exists:', hasUserControlled);
             
-            // Force clean initial state - show sidebar on desktop, hide on mobile
-            if (window.innerWidth <= 768) {
-                // Mobile: hide sidebar
-                toggleSidebar(false);
-            } else {
-                // Desktop: show sidebar
-                toggleSidebar(true);
+            if (!hasUserControlled) {
+                // Force clean initial state - show sidebar on desktop, hide on mobile
+                if (window.innerWidth <= 768) {
+                    // Mobile: hide sidebar
+                    toggleSidebar(false);
+                } else {
+                    // Desktop: show sidebar (don't set user-controlled flag)
+                    const rightPanel = document.getElementById('right-panel');
+                    const container = document.querySelector('.container');
+                    if (rightPanel) {
+                        leftPanel.classList.remove('hidden');
+                        rightPanel.classList.remove('expanded');
+                        // Update container classes for logo visibility
+                        if (container) {
+                            container.classList.remove('left-panel-collapsed');
+                            container.classList.add('left-panel-visible');
+                        }
+                    }
+                }
             }
         }
     }, 50);
@@ -195,8 +247,239 @@ window.toggleCanvas = function() {
     }
 };
 
-// Make toggleSidebar available globally for debugging
+// Collapsible message functionality
+function initializeCollapsibleMessages() {
+    console.log('Initializing collapsible messages');
+    
+    // Auto-collapse tool, thinking, and delegation messages
+    const autoCollapseTypes = [
+        '.message-tool',
+        '.message-code-exe', 
+        '.message-browser',
+        '.message-agent-delegation',
+        '.message-util'
+    ];
+    
+    let totalProcessed = 0;
+    
+    autoCollapseTypes.forEach(selector => {
+        const messages = document.querySelectorAll(selector);
+        console.log(`Found ${messages.length} messages matching ${selector}`);
+        
+        messages.forEach(message => {
+            if (!message.classList.contains('message-collapsible')) {
+                console.log(`Making message collapsible:`, message);
+                makeMessageCollapsible(message, true); // true = start collapsed
+                totalProcessed++;
+            } else {
+                console.log(`Message already collapsible:`, message);
+            }
+        });
+    });
+    
+    console.log(`Processed ${totalProcessed} messages for collapsible functionality`);
+    
+    // Also log all message elements for debugging
+    const allMessages = document.querySelectorAll('[class*="message-"]');
+    console.log(`Total messages found: ${allMessages.length}`);
+    allMessages.forEach((msg, index) => {
+        console.log(`Message ${index}: ${msg.className}`);
+    });
+}
+
+function makeMessageCollapsible(messageElement, startCollapsed = false) {
+    if (messageElement.classList.contains('message-collapsible')) {
+        return; // Already made collapsible
+    }
+    
+    // Prevent processing incomplete or phantom message elements
+    if (!messageElement.id || !messageElement.classList.contains('message')) {
+        console.log('Skipping collapsible processing for incomplete element:', messageElement);
+        return;
+    }
+    
+    messageElement.classList.add('message-collapsible');
+    
+    // Wrap existing content
+    const existingContent = messageElement.innerHTML;
+    const contentWrapper = document.createElement('div');
+    contentWrapper.className = 'message-content';
+    contentWrapper.innerHTML = existingContent;
+    
+    // Create summary
+    const summary = document.createElement('div');
+    summary.className = 'collapse-summary';
+    
+    // Create toggle button
+    const toggleButton = document.createElement('button');
+    toggleButton.className = 'collapse-toggle';
+    
+    // Determine summary text from existing heading or content
+    let summaryText = 'Internal process';
+    
+    // Try to extract a meaningful title from the message content
+    const headingElement = messageElement.querySelector('.msg-heading');
+    if (headingElement && headingElement.textContent.trim()) {
+        summaryText = headingElement.textContent.trim();
+    } else {
+        // Fallback to extracting from content for specific message types
+        if (messageElement.classList.contains('message-tool')) {
+            // Try to extract tool name from content
+            const contentText = messageElement.textContent || '';
+            const toolMatch = contentText.match(/Tool:\s*([^\n]+)/i) || contentText.match(/Using tool:\s*([^\n]+)/i);
+            summaryText = toolMatch ? `Tool: ${toolMatch[1].trim()}` : 'Tool usage';
+        } else if (messageElement.classList.contains('message-code-exe')) {
+            // Try to extract code type or first line
+            const contentText = messageElement.textContent || '';
+            const codeMatch = contentText.match(/Executing ([^:]+):/i) || contentText.match(/Running ([^:]+):/i);
+            summaryText = codeMatch ? `Code: ${codeMatch[1].trim()}` : 'Code execution';
+        } else if (messageElement.classList.contains('message-browser')) {
+            // Try to extract browser action
+            const contentText = messageElement.textContent || '';
+            const browserMatch = contentText.match(/(Navigate|Click|Type|Scroll|Browser):\s*([^\n]+)/i);
+            summaryText = browserMatch ? `Browser: ${browserMatch[2] || browserMatch[1]}`.substring(0, 50) : 'Browser interaction';
+        } else if (messageElement.classList.contains('message-agent-delegation')) {
+            summaryText = 'Agent thinking';
+        } else if (messageElement.classList.contains('message-util')) {
+            // Try to extract utility operation
+            const contentText = messageElement.textContent || '';
+            const utilMatch = contentText.match(/([A-Z][a-z]+(?:\s+[a-z]+)*)/);
+            summaryText = utilMatch ? `Utility: ${utilMatch[1]}` : 'Utility operation';
+        }
+    }
+    
+    summary.textContent = summaryText;
+    
+    // Set initial state
+    if (startCollapsed) {
+        messageElement.classList.add('collapsed');
+        toggleButton.textContent = 'Show';
+    } else {
+        toggleButton.textContent = 'Hide';
+    }
+    
+    // Clear and rebuild message
+    messageElement.innerHTML = '';
+    messageElement.appendChild(toggleButton);
+    messageElement.appendChild(summary);
+    messageElement.appendChild(contentWrapper);
+    
+    // Add click handler
+    toggleButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMessageCollapse(messageElement);
+    });
+}
+
+function toggleMessageCollapse(messageElement) {
+    const isCollapsed = messageElement.classList.contains('collapsed');
+    const toggleButton = messageElement.querySelector('.collapse-toggle');
+    
+    if (isCollapsed) {
+        messageElement.classList.remove('collapsed');
+        toggleButton.textContent = 'Hide';
+    } else {
+        messageElement.classList.add('collapsed');
+        toggleButton.textContent = 'Show';
+    }
+}
+
+// Initialize collapsible messages 
+function setupCollapsibleMessages() {
+    console.log('Setting up collapsible messages...');
+    
+    // Initialize existing messages
+    initializeCollapsibleMessages();
+    
+    // Set up observer for new messages
+    const chatHistory = document.getElementById('chat-history');
+    if (chatHistory) {
+        console.log('Setting up MutationObserver for chat history');
+        const observer = new MutationObserver((mutations) => {
+            // Debounce rapid mutations to prevent processing phantom fragments
+            clearTimeout(observer.debounceTimer);
+            observer.debounceTimer = setTimeout(() => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            // Skip processing if this is a message container being updated (not a new message)
+                            if (node.id && node.id.startsWith('message-') && 
+                                document.getElementById(node.id) && 
+                                document.getElementById(node.id) !== node) {
+                                console.log('Skipping duplicate message container:', node.id);
+                                return;
+                            }
+                            
+                            // Check if the added node or its children contain collapsible message types
+                            const autoCollapseSelectors = [
+                                '.message-tool',
+                                '.message-code-exe', 
+                                '.message-browser',
+                                '.message-agent-delegation',
+                                '.message-util'
+                            ];
+                            
+                            autoCollapseSelectors.forEach(selector => {
+                                // Check the node itself - but only if it's a complete message container
+                                if (node.matches && node.matches(selector) && 
+                                    node.classList.contains('message-container')) {
+                                    console.log('Making node collapsible:', selector);
+                                    makeMessageCollapsible(node, true);
+                                } else if (node.classList.contains('message-container')) {
+                                    // Only check children if this is a message container
+                                    // This prevents processing fragments or partial DOM updates
+                                    const childMessages = node.querySelectorAll && node.querySelectorAll(selector);
+                                    if (childMessages) {
+                                        childMessages.forEach(msg => {
+                                            if (!msg.classList.contains('message-collapsible')) {
+                                                console.log('Making child collapsible:', selector);
+                                                makeMessageCollapsible(msg, true);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+            }, 100); // 100ms debounce delay
+        });
+        
+        observer.observe(chatHistory, {
+            childList: true,
+            subtree: true
+        });
+    } else {
+        console.warn('Chat history element not found');
+    }
+}
+
+// Initialize on DOM ready and also with a delay
+document.addEventListener('DOMContentLoaded', () => {
+    setupCollapsibleMessages();
+    
+    // Also try after a short delay in case messages load after DOM ready
+    setTimeout(() => {
+        console.log('Running delayed collapsible message initialization...');
+        initializeCollapsibleMessages();
+    }, 1000);
+    
+    // And set up a periodic check for the first few seconds
+    let checkCount = 0;
+    const periodicCheck = setInterval(() => {
+        console.log('Periodic check for collapsible messages...');
+        initializeCollapsibleMessages();
+        checkCount++;
+        if (checkCount >= 5) { // Stop after 5 checks
+            clearInterval(periodicCheck);
+        }
+    }, 2000);
+});
+
+// Make functions available globally for debugging
 window.toggleSidebar = toggleSidebar;
+window.initializeCollapsibleMessages = initializeCollapsibleMessages;
+window.makeMessageCollapsible = makeMessageCollapsible;
 
 // Simple test to trigger canvas manually
 window.testCanvasOpen = function() {
@@ -611,7 +894,16 @@ export async function sendMessage() {
             //     }
             // }
             else {
-                setContext(jsonResponse.context);
+                // Handle context response from backend
+                if (jsonResponse.context) {
+                    if (jsonResponse.context !== context) {
+                        console.warn("Backend returned different context:", jsonResponse.context, "vs current:", context);
+                        // Only switch if the backend context seems valid (not falling back to first context)
+                        // For now, let's trust the backend but log the discrepancy
+                        console.warn("Switching to backend context to ensure proper message flow");
+                        setContext(jsonResponse.context);
+                    }
+                }
             }
 
             // Clear input and attachments
@@ -685,14 +977,31 @@ function updateUserTime() {
 
 
 function setMessage(id, type, heading, content, temp, kvps = null) {
+    // Validate message ID to prevent phantom bubbles
+    if (!id || id === undefined || id === null) {
+        console.warn('Skipping message with invalid ID:', id, type, heading);
+        return;
+    }
+
     // Search for the existing message container by id
     let messageContainer = document.getElementById(`message-${id}`);
+    let isNewMessage = false;
 
     if (messageContainer) {
         // Don't re-render user messages
         if (type === 'user') {
             return; // Skip re-rendering
         }
+        
+        // Check if this is actually a meaningful update (not just a phantom re-render)
+        const existingContent = messageContainer.textContent || '';
+        const newContent = (heading || '') + (content || '');
+        
+        if (existingContent === newContent && !kvps) {
+            console.log('Skipping duplicate message update for ID:', id);
+            return; // Skip meaningless updates
+        }
+        
         // For other types, update the message
         messageContainer.innerHTML = '';
     } else {
@@ -702,13 +1011,14 @@ function setMessage(id, type, heading, content, temp, kvps = null) {
         messageContainer.id = `message-${id}`;
         messageContainer.classList.add('message-container', `${sender}-container`);
         if (temp) messageContainer.classList.add("message-temp");
+        isNewMessage = true;
     }
 
     const handler = msgs.getHandler(type);
     handler(messageContainer, id, type, heading, content, temp, kvps);
 
-    // If the container was found, it was already in the DOM, no need to append again
-    if (!document.getElementById(`message-${id}`)) {
+    // Only append new messages to avoid DOM manipulation issues
+    if (isNewMessage) {
         chatHistory.appendChild(messageContainer);
     }
 
@@ -849,7 +1159,13 @@ async function poll() {
         // Update chats list and sort by created_at time (newer first)
         const chatsAD = Alpine.$data(chatsSection);
         const contexts = response.contexts || [];
-        chatsAD.contexts = contexts.sort((a, b) =>
+        
+        // Remove duplicates based on ID and sort by created_at time (newer first)
+        const uniqueContexts = contexts.filter((context, index, self) => 
+            index === self.findIndex(c => c.id === context.id)
+        );
+        
+        chatsAD.contexts = uniqueContexts.sort((a, b) =>
             (b.created_at || 0) - (a.created_at || 0)
         );
 
@@ -861,8 +1177,12 @@ async function poll() {
 
             // Always update tasks to ensure state changes are reflected
             if (tasks.length > 0) {
-                // Sort the tasks by creation time
-                const sortedTasks = [...tasks].sort((a, b) =>
+                // Remove duplicates and sort the tasks by creation time
+                const uniqueTasks = tasks.filter((task, index, self) => 
+                    index === self.findIndex(t => t.id === task.id)
+                );
+                
+                const sortedTasks = uniqueTasks.sort((a, b) =>
                     (b.created_at || 0) - (a.created_at || 0)
                 );
 
@@ -886,15 +1206,11 @@ async function poll() {
                 // Check if this context exists in the chats list
                 const contextExists = contexts.some(ctx => ctx.id === context);
 
-                // If it doesn't exist in the chats list but we're in chats tab, try to select the first chat
-                if (!contextExists && contexts.length > 0) {
-                    // Check if the current context is empty before creating a new one
-                    // If there's already a current context and we're just updating UI, don't automatically
-                    // create a new context by calling setContext
+                // If context doesn't exist in list, it might be a new context that hasn't been persisted yet
+                // Only switch away if we have significant chat history (meaning it's likely an old invalid context)
+                if (!contextExists && contexts.length > 0 && lastLogVersion > 5) {
+                    console.log("Context not found in list and has chat history, switching to first available chat");
                     const firstChatId = contexts[0].id;
-
-                    // Only create a new context if we're not currently in an existing context
-                    // This helps prevent duplicate contexts when switching tabs
                     setContext(firstChatId);
                     chatsAD.selected = firstChatId;
                     localStorage.setItem('lastSelectedChat', firstChatId);
@@ -928,7 +1244,8 @@ async function poll() {
             // If we're in chats tab with no selection but have chats, select the first one
             const firstChatId = contexts[0].id;
 
-            // Only set context if we don't already have one to avoid duplicates
+            // Only auto-select if we truly have no context
+            // Don't override newly created contexts that haven't appeared in the list yet
             if (!context) {
                 setContext(firstChatId);
                 chatsAD.selected = firstChatId;
@@ -1000,8 +1317,24 @@ window.resetChat = async function (ctxid=null) {
 
 window.newChat = async function () {
     try {
-        setContext(generateGUID());
-        updateAfterScroll()
+        const newContextId = generateGUID();
+
+        // Create context on server first
+        const response = await sendJsonData("/context_create", {
+            context: newContextId,
+            type: "user"
+        });
+
+        if (response && response.success) {
+            // Switch to new context
+            setContext(newContextId);
+            // Force an immediate poll to ensure the backend creates and recognizes the new context
+            await poll();
+            updateAfterScroll();
+            toast("New chat created", "success");
+        } else {
+            toast("Failed to create new chat: " + (response && response.error ? response.error : "Unknown error"), "error");
+        }
     } catch (e) {
         window.toastFetchError("Error creating new chat", e)
     }
@@ -1019,6 +1352,13 @@ window.killChat = async function (id) {
         const chatsAD = Alpine.$data(chatsSection);
         console.log("Current contexts before deletion:", JSON.stringify(chatsAD.contexts.map(c => ({ id: c.id, name: c.name }))));
 
+        // Find the chat to be deleted
+        const chatToDelete = chatsAD.contexts.find(ctx => ctx.id === id);
+        if (!chatToDelete) {
+            console.warn("Chat not found in UI list:", id);
+            return;
+        }
+
         // switch to another context if deleting current
         switchFromContext(id);
 
@@ -1032,6 +1372,13 @@ window.killChat = async function (id) {
 
         // Force UI update by creating a new array
         chatsAD.contexts = [...updatedContexts];
+
+        // If we deleted the last chat and are still in chats tab, ensure UI state is correct
+        if (updatedContexts.length === 0 && localStorage.getItem('activeTab') === 'chats') {
+            // Clear chat history since we have no chats
+            chatHistory.innerHTML = "";
+            // The new context created in switchFromContext will be picked up by the next poll
+        }
 
         updateAfterScroll();
 
@@ -1058,9 +1405,36 @@ export function switchFromContext(id){
 
         if (alternateChat) {
             setContext(alternateChat.id);
+            // Update localStorage to reflect the new selection
+            const activeTab = localStorage.getItem('activeTab') || 'chats';
+            if (activeTab === 'chats') {
+                localStorage.setItem('lastSelectedChat', alternateChat.id);
+            }
         } else {
             // If no other chats, create a new empty context
-            setContext(generateGUID());
+            // Use the same logic as newChat() to properly initialize it
+            const newContextId = generateGUID();
+            
+            // Create context on server first
+            sendJsonData("/context_create", {
+                context: newContextId,
+                type: "user"
+            }).then(response => {
+                if (response.success) {
+                    setContext(newContextId);
+                    // Update localStorage
+                    const activeTab = localStorage.getItem('activeTab') || 'chats';
+                    if (activeTab === 'chats') {
+                        localStorage.setItem('lastSelectedChat', newContextId);
+                    }
+                } else {
+                    console.error("Failed to create new context after deletion:", response.error);
+                }
+            }).catch(e => {
+                console.warn("Failed to create new context after deletion:", e);
+                // Fallback to old method
+                setContext(newContextId);
+            });
         }
     }
 }
@@ -1688,6 +2062,11 @@ function activateTab(tabName) {
             lastSelectedChat !== currentContext &&
             (availableContexts.some(ctx => ctx.id === lastSelectedChat) || availableContexts.length === 0)) {
             setContext(lastSelectedChat);
+        } else if (lastSelectedChat && availableContexts.length > 0 && 
+                   !availableContexts.some(ctx => ctx.id === lastSelectedChat)) {
+            // Clear invalid context ID from localStorage only if it's clearly invalid
+            console.log('Clearing invalid lastSelectedChat:', lastSelectedChat);
+            localStorage.removeItem('lastSelectedChat');
         }
     } else if (tabName === 'tasks') {
         tasksTab.classList.add('active');
@@ -1709,6 +2088,10 @@ function activateTab(tabName) {
             lastSelectedTask !== currentContext &&
             availableTasks.some(task => task.id === lastSelectedTask)) {
             setContext(lastSelectedTask);
+        } else if (lastSelectedTask && availableTasks.length > 0 && 
+                   !availableTasks.some(task => task.id === lastSelectedTask)) {
+            // Clear invalid task ID from localStorage
+            localStorage.removeItem('lastSelectedTask');
         }
     }
 
