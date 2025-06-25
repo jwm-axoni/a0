@@ -45,7 +45,7 @@ docker-compose -f docker-compose.cuda.yml up -d
 
 Once the container is running, open your browser and go to:
 
-[http://localhost:50080](http://localhost:50080)
+[http://localhost:8080](http://localhost:8080)
 
 ---
 

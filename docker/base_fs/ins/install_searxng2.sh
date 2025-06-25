@@ -3,10 +3,27 @@ set -e
 
 echo "====================SEARXNG2 START===================="
 
+# Configure git for better large repo handling
+git config --global http.postBuffer 524288000
+git config --global http.lowSpeedLimit 0
+git config --global http.lowSpeedTime 999999
 
-# clone SearXNG repo
-git clone "https://github.com/searxng/searxng" \
-                   "/usr/local/searxng/searxng-src"
+# clone SearXNG repo with retry logic and shallow clone
+for i in {1..3}; do
+    echo "Attempting to clone SearxNG (attempt $i/3)..."
+    if git clone --depth 1 "https://github.com/searxng/searxng" \
+                   "/usr/local/searxng/searxng-src"; then
+        echo "Clone successful!"
+        break
+    else
+        echo "Clone failed on attempt $i"
+        if [ $i -eq 3 ]; then
+            echo "All clone attempts failed, exiting..."
+            exit 1
+        fi
+        sleep 5
+    fi
+done
 
 echo "====================SEARXNG2 VENV===================="
 

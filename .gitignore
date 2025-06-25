@@ -56,3 +56,18 @@ instruments/**
 # Global rule to include .gitkeep files anywhere
 !**/.gitkeep
 agent_history.gif
+
+# Additional security exclusions for testing branch
+*.key
+*.pem
+*.p12
+*.pfx
+*api_key*
+*secret*
+*password*
+*token*
+.env.*
+!.env.example
+!example.env
+config.local.*
+local_config.*

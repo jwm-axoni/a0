@@ -1,0 +1,22 @@
+services:
+  agent-zero:
+    container_name: agent-zero
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BRANCH: ${BRANCH:-main}
+        CACHE_DATE: ${CACHE_DATE:-none}
+    volumes:
+      - ../:/a0
+    ports:
+      - "8080:80"
+    environment:
+      - BRANCH=${BRANCH:-main}
+      - WATCH=1
+    # Enable Docker Compose watch for live reload (if supported by your Docker version)
+    develop:
+      watch:
+        - path: ../
+          action: sync
+          target: /a0
