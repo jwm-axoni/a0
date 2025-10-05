@@ -416,11 +416,11 @@ export function drawMessageUser(
   // Handle heading
   let headingElement = messageDiv.querySelector(".msg-heading");
   if (!headingElement) {
-    headingElement = document.createElement("h4");
+    headingElement = document.createElement("div");
     headingElement.classList.add("msg-heading");
     messageDiv.insertBefore(headingElement, messageDiv.firstChild);
   }
-  headingElement.innerHTML = `${heading} <span class='icon material-symbols-outlined'>person</span>`;
+  headingElement.innerHTML = `<span class='icon material-symbols-outlined'>person</span>`;
 
   // Handle content
   let textDiv = messageDiv.querySelector(".message-text");
