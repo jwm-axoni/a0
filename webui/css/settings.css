@@ -70,7 +70,7 @@ textarea {
   border: 6px solid transparent;
 }
 
-textarea:focus {
+textarea:focus:not(#chat-input) {
   background-color: #151515;
 }
 
