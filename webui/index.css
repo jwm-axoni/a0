@@ -1571,17 +1571,9 @@ input:checked + .slider:before {
 @media (max-width: 640px) {
   #chat-input {
     min-height: 5.3rem;
-    align-content: start;
-  }
-
-  #chat-buttons-wrapper {
-    display: flex;
-    gap: var(--spacing-xs);
-    padding: 0;
-    width: 3.5rem;
-    flex-wrap: wrap;
-    -webkit-transition: all 0.3s ease;
-    transition: all 0.3s ease;
+    line-height: 5.3rem;
+    padding: var(--spacing-xs) 90px var(--spacing-xs) 2.5rem;
+    font-size: var(--font-size-smaller);
   }
 
   .sidebar-overlay {
@@ -2833,7 +2825,7 @@ nav ul li a img {
   }
 
   #chat-input {
-    padding: var(--spacing-xs) 90px var(--spacing-xs) var(--spacing-xs);
+    padding: var(--spacing-xs) 90px var(--spacing-xs) 2.5rem;
     font-size: var(--font-size-smaller);
   }
 
@@ -2852,6 +2844,16 @@ nav ul li a img {
 
   #expand-button {
     right: 80px;
+  }
+
+  /* Hide logo on mobile */
+  #logo-container {
+    display: none;
+  }
+
+  /* Hide clock on mobile, keep status and notification */
+  #time-date {
+    display: none;
   }
 }
 

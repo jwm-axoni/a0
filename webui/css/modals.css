@@ -45,6 +45,19 @@
   }
 }
 
+@media (max-width: 640px) {
+  .modal-overlay {
+    align-items: flex-start;
+    padding-top: 2rem; /* Add top padding to prevent bottom cutoff */
+  }
+
+  .modal-container {
+    /* Prevent footer button clipping on mobile */
+    padding-bottom: 0;
+    max-height: 85vh; /* Reduce height to leave room for buttons */
+  }
+}
+
 /* Modal Header */
 .modal-header {
   display: grid;
@@ -401,6 +414,26 @@
 
   .btn-upload > svg {
     width: 20px;
+  }
+
+  /* Thinner borders for mobile to prevent outline cutoff */
+  .btn-cancel {
+    border-width: 0.05rem; /* Even thinner */
+  }
+
+  .btn-upload {
+    border: none; /* Remove border entirely for upload button */
+  }
+
+  /* Ensure buttons have proper spacing from modal edges */
+  .modal-footer {
+    padding: var(--spacing-sm) var(--spacing-sm) 1rem var(--spacing-sm) !important;
+  }
+
+  /* Add margin to buttons to prevent clipping */
+  .btn-cancel,
+  .btn-upload {
+    margin-bottom: 0.5rem;
   }
 }
 
