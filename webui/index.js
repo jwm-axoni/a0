@@ -19,7 +19,6 @@ const statusSection = document.getElementById("status-section");
 const chatsSection = document.getElementById("chats-section");
 const tasksSection = document.getElementById("tasks-section");
 const progressBar = document.getElementById("progress-bar");
-const progressBarBox = document.getElementById("progress-bar-box");
 const autoScrollSwitch = document.getElementById("auto-scroll-switch");
 const timeDate = document.getElementById("time-date-container");
 
@@ -563,10 +562,8 @@ function updateProgress(progress, active) {
 
   if (!active) {
     removeClassFromElement(progressBar, "shiny-text");
-    progressBarBox.classList.remove("generating");
   } else {
     addClassToElement(progressBar, "shiny-text");
-    progressBarBox.classList.add("generating");
   }
 
   progress = msgs.convertIcons(progress);

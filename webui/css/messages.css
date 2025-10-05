@@ -460,62 +460,62 @@
 
 .light-mode .message-default {
   background-color: var(--color-panel);
-  color: #1a242f;
+  color: #000000;
 }
 
 .light-mode .message-agent {
   background-color: var(--color-panel);
-  color: #356ca3;
+  color: #000000;
 }
 
 .light-mode .message-agent-response {
   background-color: var(--color-panel);
-  color: #188216;
+  color: #000000;
 }
 
 .light-mode .message-agent-delegation {
   background-color: var(--color-panel);
-  color: #12685e;
+  color: #000000;
 }
 
 .light-mode .message-tool {
   background-color: var(--color-panel);
-  color: #1c3c88;
+  color: #000000;
 }
 
 .light-mode .message-code-exe {
   background-color: var(--color-panel);
-  color: #6c43b0;
+  color: #000000;
 }
 
 .light-mode .message-browser {
   background-color: var(--color-panel);
-  color: #6c43b0;
+  color: #000000;
 }
 
 .light-mode .message-info {
   background-color: var(--color-panel);
-  color: #3f3f3f;
+  color: #000000;
 }
 
 .light-mode .message-util {
   background-color: var(--color-panel);
-  color: #5b5540;
+  color: #000000;
 }
 
 .light-mode .message-warning {
   background-color: var(--color-panel);
-  color: #8f4800;
+  color: #000000;
 }
 
 .light-mode .message-error {
   background-color: var(--color-panel);
-  color: #8f1010;
+  color: #000000;
 }
 
 .light-mode .message-user {
-  background-color: var(--color-panel);
-  color: #4e4e4e;
+  background-color: #e8e8e8;
+  color: #000000;
 }
 
 /* Markdown in messages */
@@ -725,9 +725,9 @@
 
 /* Light mode user message styling */
 .light-mode .message-user {
-  background-color: #ffffff;
-  color: #475569;
-  border: 1px solid #e2e8f0;
+  background-color: #e8e8e8;
+  color: #000000;
+  border: 1px solid #d0d0d0;
 }
 
 /* Mobile responsive overrides for centered layout */
