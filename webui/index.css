@@ -2825,7 +2825,7 @@ nav ul li a img {
   }
 
   #chat-input {
-    padding: var(--spacing-xs) 90px var(--spacing-xs) 2.5rem;
+    padding: var(--spacing-xs) 100px var(--spacing-xs) 2.5rem;
     font-size: var(--font-size-smaller);
   }
 
@@ -2843,7 +2843,7 @@ nav ul li a img {
   }
 
   #expand-button {
-    right: 80px;
+    right: 70px;
   }
 
   /* Hide logo on mobile */
