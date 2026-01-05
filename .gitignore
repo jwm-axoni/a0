@@ -8,6 +8,12 @@
 #Ignore IDE files
 .cursor/
 .windsurf/
+.serena/
+
+# Ignore Node.js files (not used in Agent Zero)
+node_modules/
+package.json
+package-lock.json
 
 # ignore test files in root dir
 /*.test.py
