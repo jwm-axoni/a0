@@ -39,9 +39,20 @@ This folder contains comprehensive documentation for understanding and working w
    - Configuration system details
    - In-depth reference guide
 
+### Strategic Planning
+
+5. **ENHANCEMENT_ROADMAP.md** 🚀 NEW
+   - Comprehensive analysis of 10 proposed enhancements
+   - Priority scoring (Impact, Effort, Feasibility)
+   - Implementation proposals for top 5 features
+   - 6-7 month phased roadmap
+   - What NOT to build (save 8-11 months of wasted effort)
+   - Risk assessment and success metrics
+   - Critical for strategic planning and future development
+
 ### Raw Data
 
-5. **repomix-output.xml** (14MB)
+6. **repomix-output.xml** (14MB)
    - Complete packed codebase
    - All source code and file contents
    - Useful for searching and cross-referencing
@@ -69,6 +80,15 @@ Use DOCUMENTATION_INDEX.md to find your use case
 → Cross-reference QUICK_REFERENCE.md for commands
 → Check ANALYSIS.md for component details
 → Search repomix-output.xml for code examples
+```
+
+### For Strategic Planning (Product/Engineering Leaders)
+```
+ENHANCEMENT_ROADMAP.md (30-60 min)
+→ Review priority matrix and scoring
+→ Understand what NOT to build (critical!)
+→ Review phased implementation plan
+→ Assess resource requirements and timeline
 ```
 
 ## 🔑 Key Concepts at a Glance
