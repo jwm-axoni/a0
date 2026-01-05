@@ -119,9 +119,73 @@
 
 ## Next Phases
 
-- [ ] Phase 2.2: Sidebar Styling
-- [ ] Phase 2.3: Chat Messages Styling
-- [ ] Phase 2.4: Input Bar Styling
-- [ ] Phase 3: Micro-Interactions
-- [ ] Testing & Validation
+### Phase 2: Component Styling
+- [x] Phase 2.1: Settings Modal ✅
+- [ ] Phase 2.2: Sidebar Components
+  - Left sidebar container
+  - Quick action buttons
+  - Chat list items
+  - Task list items
+  - Search input
+  - Bottom preferences panel
+- [ ] Phase 2.3: Chat Area
+  - Message bubbles (AI, user, system, tool, error types)
+  - Code blocks
+  - Action buttons
+  - Resize handles
+- [ ] Phase 2.4: Input Bar
+  - Text input area
+  - Send button
+  - Attachment preview
+  - Bottom action buttons (pause, history, context, etc.)
+  - Progress indicators
+
+### Phase 3: Modal Windows & Popups
+- [ ] Phase 3.1: General Modal System
+  - Modal backdrop
+  - Modal container
+  - Modal header/close button
+  - Modal body
+  - Modal footer
+- [ ] Phase 3.2: Specific Modals
+  - Full-screen input modal
+  - Context modal
+  - History modal
+  - File browser modal
+  - Image viewer modal
+  - Notification modal
+- [ ] Phase 3.3: Settings Sub-Screens
+  - Memory dashboard
+  - A2A connection
+  - MCP servers
+  - Tunnel section
+  - Backup/Restore
+  - Speech settings
+  - Secrets/API keys
+
+### Phase 4: Dropdowns & Menus
+- [ ] Phase 4.1: Project Selector Dropdown
+- [ ] Phase 4.2: Context Menus
+- [ ] Phase 4.3: Action Menus
+
+### Phase 5: Special Components
+- [ ] Phase 5.1: Welcome Screen
+- [ ] Phase 5.2: Toast Notifications
+- [ ] Phase 5.3: Drag & Drop Overlay
+- [ ] Phase 5.4: Speech Recognition UI
+- [ ] Phase 5.5: Scheduler/Datepicker
+
+### Phase 6: Micro-Interactions & Polish
+- [ ] Phase 6.1: Hover Effects
+- [ ] Phase 6.2: Loading States
+- [ ] Phase 6.3: Transitions & Animations
+- [ ] Phase 6.4: Focus States
+- [ ] Phase 6.5: Error States
+
+### Phase 7: Testing & Validation
+- [ ] Phase 7.1: Dark Mode Testing
+- [ ] Phase 7.2: Light Mode Testing
+- [ ] Phase 7.3: Responsive Testing
+- [ ] Phase 7.4: Accessibility Testing
+- [ ] Phase 7.5: Cross-browser Testing
 
