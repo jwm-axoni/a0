@@ -21,23 +21,27 @@
 
 
     <style>
-    /* Input section wrapper */
+    /* Input Section Wrapper - Refined Technical Aesthetic */
     #input-section {
       position: relative;
       background-color: var(--color-panel);
-      display: -webkit-flex;
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-xs);
-      padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 0.8rem;
+      gap: 0.5rem;
+      padding: 1rem 1.25rem 1rem 1rem;
       align-items: start;
       place-items: normal;
       flex-shrink: 0;
       z-index: 1001;
+      border-top: 1px solid var(--color-border);
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
     }
 
     @media (max-width: 768px) {
-      #input-section { align-items: normal !important; }
+      #input-section {
+        align-items: normal !important;
+        padding: 0.875rem 1rem;
+      }
     }
     </style>
 </body>
