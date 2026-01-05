@@ -68,39 +68,47 @@
       display: none;
     }
 
+    /* Chat List Items - Refined Technical Aesthetic */
     .chat-container {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      min-height: 40px;
-      border-radius: 4px;
-      transition: background-color 0.2s ease-in-out;
+      min-height: 42px;
+      border-radius: 0.5rem;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       overflow: hidden;
       cursor: pointer;
+      margin-bottom: 0.25rem;
     }
 
     .chat-container:hover {
-      background-color: var(--color-background-hover);
+      background-color: var(--color-secondary);
+      transform: translateX(2px);
+    }
+
+    .chat-container:hover .edit-button {
+      opacity: 1;
     }
 
     .chat-list-button {
       display: flex;
       align-items: center;
       flex-grow: 1;
-      padding: 8px;
+      padding: 0.625rem;
       overflow: hidden;
-      gap: 0.5em;
+      gap: 0.625rem;
     }
 
     .project-color-ball {
-      width: 0.6em;
-      height: 0.6em;
+      width: 0.5rem;
+      height: 0.5rem;
       border-radius: 50%;
       display: inline-block;
       box-sizing: border-box;
       flex-shrink: 0;
+      box-shadow: 0 0 0 2px var(--color-panel);
     }
 
     .chat-name {
@@ -108,30 +116,37 @@
       overflow: hidden;
       text-overflow: ellipsis;
       font-size: var(--font-size-small);
+      color: var(--color-primary);
+      font-weight: var(--font-weight-normal);
     }
 
     .edit-button {
       flex-shrink: 0;
-      margin-right: 8px;
+      margin-right: 0.5rem;
       background-color: transparent;
-      border: 1px solid var(--color-border);
-      border-radius: 0.1875rem;
+      border: 1px solid transparent;
+      border-radius: 0.375rem;
       color: var(--color-primary);
       cursor: pointer;
-      padding: 0.125rem 0.5rem;
-      transition: all var(--transition-speed) ease-in-out;
-      width: 2rem;
-      height: 2rem;
+      padding: 0.25rem;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 1.75rem;
+      height: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      font-size: 0.875rem;
     }
 
     .edit-button:hover {
-      border-color: var(--color-primary);
-      background-color: #32455690;
+      border-color: #ef4444;
+      background-color: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
     }
 
     .edit-button:active {
-      background-color: #131a2090;
-      color: rgba(253, 253, 253, 0.35);
+      background-color: rgba(239, 68, 68, 0.2);
     }
 
     .empty-list-message {
@@ -149,20 +164,30 @@
       color: var(--color-secondary-light);
     }
 
-    /* Selected chat accent */
+    /* Selected chat accent - emerald highlight */
     .chat-selected {
-      background-color: var(--color-background-hover);
+      background-color: var(--color-secondary);
+      border-left: 3px solid var(--color-accent);
+      padding-left: 0;
+    }
+
+    .chat-selected .chat-list-button {
+      padding-left: calc(0.625rem - 3px);
     }
 
     .chat-selected .chat-name {
       font-size: var(--font-size-normal);
-      font-weight: bold;
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text);
     }
 
-    /* .chat-list-button.font-bold { position: relative; background-color: var(--color-border) 0.05; } */
-    /* .chat-list-button.font-bold::before { content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 3px; background-color: var(--color-border); border-top-left-radius: 3px; border-bottom-left-radius: 3px; } */
-    /* .light-mode .chat-list-button.font-bold { background-color: var(--color-border) 0.05; } */
-    /* .light-mode .chat-list-button.font-bold::before { background-color: var(--color-border); } */
+    .chat-selected .edit-button {
+      opacity: 1;
+    }
+
+    .chat-selected .project-color-ball {
+      box-shadow: 0 0 0 2px var(--color-secondary);
+    }
   </style>
 </body>
 
