@@ -1,38 +1,96 @@
-# Frontend Design Skill
+# Frontend Design Skill - Agent Zero UI
 
-> Reference this file when building UI components for Agent Zero.
+## 🎯 Design Direction: Vercel/v0.dev Inspired
 
-## Design Thinking
+**CRITICAL**: See `AgentZero_KnowledgeTransfer/UI_COMPLETE_REDESIGN_SPEC.md` for full specifications.
 
-Before coding, understand the context and commit to a BOLD aesthetic direction:
-- **Purpose**: What problem does this interface solve? Who uses it?
-- **Tone**: Pick an extreme: brutally minimal, maximalist chaos, retro-futuristic, organic/natural, luxury/refined, playful/toy-like, editorial/magazine, brutalist/raw, art deco/geometric, soft/pastel, industrial/utilitarian, etc.
-- **Constraints**: Technical requirements (framework, performance, accessibility).
-- **Differentiation**: What makes this UNFORGETTABLE? What's the one thing someone will remember?
+### Design Vision
+- **Inspiration**: v0.dev / Vercel AI Chat Interface
+- **Aesthetic**: Clean, minimal, professional, modern SaaS
+- **Goal**: Premium product feel, not a developer tool
 
-**CRITICAL**: Choose a clear conceptual direction and execute it with precision. Bold maximalism and refined minimalism both work - the key is intentionality, not intensity.
+---
 
-## Frontend Aesthetics Guidelines
+## Core Principles
 
-Focus on:
-- **Typography**: Choose fonts that are beautiful, unique, and interesting. Avoid generic fonts like Arial and Inter; opt for distinctive choices. Pair a distinctive display font with a refined body font.
-- **Color & Theme**: Commit to a cohesive aesthetic. Use CSS variables for consistency. Dominant colors with sharp accents outperform timid, evenly-distributed palettes.
-- **Motion**: Use animations for effects and micro-interactions. Focus on high-impact moments: one well-orchestrated page load with staggered reveals creates more delight than scattered micro-interactions.
-- **Spatial Composition**: Unexpected layouts. Asymmetry. Overlap. Diagonal flow. Grid-breaking elements. Generous negative space OR controlled density.
-- **Backgrounds & Visual Details**: Create atmosphere and depth. Apply creative forms like gradient meshes, noise textures, geometric patterns, layered transparencies, dramatic shadows, decorative borders.
+1. **Simplicity over complexity** - Remove visual noise
+2. **Light theme primary** - White backgrounds, subtle grays
+3. **Centered content** - Max-width 800px for readability
+4. **Floating elements** - Input bar detached, shadowed
+5. **Generous whitespace** - Let content breathe
+
+---
+
+## Typography
+
+**Font**: Inter (via Google Fonts)
+```css
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+```
+
+**Weights**: 400 (normal), 500 (medium), 600 (semibold), 700 (bold)
+
+---
+
+## Color Palette
+
+### Light Theme (Primary)
+- **Backgrounds**: `#ffffff`, `#f9fafb`, `#f3f4f6`
+- **Text**: `#111827`, `#6b7280`, `#9ca3af`
+- **Borders**: `#e5e7eb`
+- **Accents**: `#a855f7` (purple), `#3b82f6` (blue)
+- **Gradients**: Purple (`#a855f7`) to Indigo (`#6366f1`)
+
+---
+
+## Critical Layout Rules
+
+### Chat Input (MOST IMPORTANT!)
+```css
+.chat-input-container {
+  max-width: 800px;
+  margin: 0 auto;           /* CENTERED */
+}
+
+.chat-input-wrapper {
+  border-radius: 24px;      /* Very rounded */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: white;
+  border: 1px solid #e5e7eb;
+}
+```
+
+The input bar MUST be:
+- ✅ CENTERED in main content area
+- ✅ NOT attached to sidebar
+- ✅ Floating with rounded corners (24px)
+- ✅ Subtle shadow for depth
+
+---
+
+## Reference Images
+
+Located in `UI_enhancement_project/`:
+- `vercel.png` through `verrcel 8.png`
+
+---
 
 ## NEVER Use
-- Generic AI aesthetics
-- Overused fonts (Inter, Roboto, Arial, system fonts)
-- Cliched color schemes (purple gradients on white backgrounds)
-- Predictable layouts and component patterns
-- Cookie-cutter design lacking context-specific character
 
-## Implementation
+❌ Dark theme as primary
+❌ Emerald/green color schemes
+❌ Input attached to sidebar
+❌ Heavy borders instead of shadows
+❌ Cramped spacing
 
-Match implementation complexity to the aesthetic vision:
-- **Maximalist designs** → elaborate code with extensive animations and effects
-- **Minimalist designs** → restraint, precision, careful spacing, typography, subtle details
+---
 
-Elegance comes from executing the vision well.
+## Quality Checklist
+
+- [ ] Chat input CENTERED and FLOATING?
+- [ ] Light theme clean and professional?
+- [ ] Inter font loading correctly?
+- [ ] Accents purple/blue (not green)?
+- [ ] Generous whitespace?
+- [ ] Matches Vercel reference at 80%+?
 
