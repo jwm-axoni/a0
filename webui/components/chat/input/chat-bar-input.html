@@ -251,16 +251,38 @@
       height: 1.25rem;
     }
 
-    /* Dark Mode - Input blends with dark background */
+    /* Dark Mode - Input bar matches main message area background */
     .dark-mode .input-row {
       background: var(--color-background, #131313);
-      border-color: var(--color-border, #444);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      border: 1px solid #3a3a3a;
+      box-shadow: none;
     }
 
     .dark-mode .input-row:focus-within {
-      border-color: var(--color-accent, #a855f7);
-      box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15), 0 2px 6px rgba(0, 0, 0, 0.3);
+      border-color: #5a5a5a;
+      box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+    }
+
+    .dark-mode #chat-input::placeholder {
+      color: #8a8a8a;
+    }
+
+    .dark-mode .attachment-icon {
+      color: #8a8a8a;
+    }
+
+    .dark-mode .attachment-icon:hover {
+      color: #d4d4d4;
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .dark-mode #expand-button {
+      color: #8a8a8a;
+    }
+
+    .dark-mode #expand-button:hover {
+      color: #d4d4d4;
+      background-color: rgba(255, 255, 255, 0.05);
     }
 
     /* Responsive */
