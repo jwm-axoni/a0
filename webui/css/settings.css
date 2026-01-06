@@ -73,7 +73,7 @@ input[type="number"]:focus,
 select:focus {
   background-color: var(--color-input-focus);
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
 }
 
 textarea {
@@ -89,7 +89,7 @@ textarea {
 textarea:focus {
   background-color: var(--color-input-focus);
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
 }
 
 /* Button Disabled State */
@@ -265,12 +265,15 @@ nav ul li a img {
   }
 }
 
-/* Settings Tab Styles */
+/* ============================================================
+   SETTINGS TABS - Modern, Clean Design
+   ============================================================ */
+
 .settings-tabs-container {
   width: 100%;
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-6, 1.5rem);
   padding: 0;
-  margin-top: 20px;
+  margin-top: var(--spacing-4, 1rem);
   position: relative;
   overflow: visible;
 }
@@ -279,11 +282,10 @@ nav ul li a img {
   display: flex;
   width: 100%;
   position: relative;
-  gap: 5px;
-  border-bottom: 3px solid var(--color-border);
+  gap: var(--spacing-2, 0.5rem);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
   justify-content: flex-start;
-  padding-left: 20px;
-  padding-top: 8px;
+  padding: 0 var(--spacing-4, 1rem);
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
@@ -318,46 +320,42 @@ nav ul li a img {
   background: linear-gradient(to left, var(--color-panel), transparent);
 }
 
+/* Individual Tab - Modern underline style */
 .settings-tab {
-  padding: 0.625rem 1rem;
+  padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
   cursor: pointer;
   position: relative;
-  color: var(--color-primary);
-  border: 1px solid transparent;
-  border-bottom: none;
-  border-radius: 0.5rem 0.5rem 0 0;
-  transition: all 0.2s ease;
+  color: var(--color-text-muted, #6b7280);
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  transition: all var(--transition-normal, 0.2s ease);
   background-color: transparent;
-  margin-bottom: -3px;
-  z-index: 1;
   min-width: min-content;
   width: auto;
-  max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   flex-shrink: 0;
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-smaller);
+  font-weight: var(--font-weight-medium, 500);
+  font-size: var(--font-size-sm, 0.875rem);
 }
 
 .settings-tab:hover:not(.active) {
-  color: var(--color-text);
-  background-color: var(--color-panel);
+  color: var(--color-text, #111827);
+  background-color: var(--color-background-hover, rgba(0, 0, 0, 0.04));
+  border-radius: var(--radius-md, 12px);
 }
 
 .settings-tab:not(.active) {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .settings-tab.active {
-  color: var(--color-text);
-  background-color: var(--color-panel);
-  border-color: var(--color-border);
-  border-bottom-color: var(--color-panel);
-  font-weight: var(--font-weight-semibold);
-  font-weight: bold;
-  background-color: var(--color-panel);
+  color: var(--color-accent, #a855f7);
+  border-bottom-color: var(--color-accent, #a855f7);
+  font-weight: var(--font-weight-semibold, 600);
+  background-color: transparent;
 }
 
 /* Light mode overrides */

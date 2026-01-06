@@ -7,7 +7,7 @@
 <body>
     <div id="input-section" x-data>
         <template x-if="$store.chatInput">
-            <div style="width: 100%; display: contents;">
+            <div class="input-section-inner">
                 <!-- Attachment Preview section -->
                 <div>
                     <x-component path="/chat/attachments/inputPreview.html" />
@@ -21,26 +21,36 @@
 
 
     <style>
-    /* Input Section Wrapper - Refined Technical Aesthetic */
+    /* ============================================================
+       INPUT SECTION - Vercel/v0.dev Inspired Floating Bar
+       CRITICAL: Must be CENTERED, not attached to sidebar
+       ============================================================ */
+
     #input-section {
       position: relative;
-      background-color: var(--color-panel);
+      width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      padding: 1rem 1.25rem 1rem 1rem;
-      align-items: start;
-      place-items: normal;
       flex-shrink: 0;
       z-index: 1001;
-      border-top: 1px solid var(--color-border);
-      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+      background-color: var(--color-background);
+      padding: var(--spacing-4, 1rem) var(--spacing-4, 1rem) var(--spacing-6, 1.5rem);
+      /* No border-top - floating design */
+    }
+
+    .input-section-inner {
+      width: 100%;
+      max-width: 640px;  /* Narrower, more modern look */
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-3, 0.75rem);
+      align-items: stretch;
     }
 
     @media (max-width: 768px) {
       #input-section {
-        align-items: normal !important;
-        padding: 0.875rem 1rem;
+        padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem) var(--spacing-4, 1rem);
       }
     }
     </style>

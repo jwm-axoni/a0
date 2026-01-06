@@ -62,32 +62,37 @@ some classes like modal-header are shared between the old and the new system */
   cursor: pointer;
 }
 
-/* Modal Container (old system) */
+/* Modal Container - Modern, clean design */
 .modal-container {
-  background-color: var(--color-panel);
-  border-radius: 12px;
-  width: 1100px; /* Reduced from 1200px to 1100px */
+  background-color: var(--color-background);
+  border-radius: var(--radius-xl, 24px);
+  width: 1100px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 4px 23px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-xl, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04));
   box-sizing: border-box;
+  border: 1px solid var(--color-border, #e5e7eb);
 }
 
-/* Modal Header */
+/* Modal Header - Clean, modern */
 .modal-header {
   display: grid;
   grid-template-columns: 40fr 0.5fr;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 1.5rem 0.5rem 2rem;
+  padding: var(--spacing-6, 1.5rem) var(--spacing-6, 1.5rem) var(--spacing-4, 1rem);
   background-color: var(--color-background);
-  color: var(--color-primary);
-  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
 }
+
 .modal-header h2 {
   margin: 0;
+  font-size: var(--font-size-2xl, 1.5rem);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-text);
 }
 
 /* Modal Subheader */
@@ -261,44 +266,61 @@ some classes like modal-header are shared between the old and the new system */
 .btn:disabled {
   cursor: not-allowed;
 }
+/* Modern Professional Buttons */
 .btn-ok {
-  background: #4248f1;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   color: white;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transition: background 0.3s ease-in-out;
+  border-radius: var(--radius-md, 12px);
+  font-weight: var(--font-weight-medium, 500);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
 }
+
 .btn-ok > svg {
   max-width: 20px;
 }
+
 .btn-ok:hover {
-  background: #353bc5;
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
 }
+
 .btn-ok:active {
-  background: #2b309c;
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.25);
 }
+
 .btn-cancel {
   background: transparent;
-  color: var(--color-accent);
-  border: 0.15rem solid var(--color-accent);
-  transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+  color: var(--color-text-muted, #6b7280);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: var(--radius-md, 12px);
+  font-weight: var(--font-weight-medium, 500);
+  transition: all 0.2s ease;
 }
+
 .btn-cancel:hover {
-  background: var(--color-accent);
+  background: var(--color-panel, #fafafa);
+  border-color: var(--color-text-muted, #6b7280);
   color: var(--color-text);
 }
+
 .btn-cancel:active {
-  background: #a94658;
-  color: var(--color-text);
+  transform: translateY(0);
+  background: var(--color-background, #ffffff);
 }
+
 .light-mode .btn-cancel:hover {
-  background: var(--color-accent);
-  color: var(--color-background);
+  background: var(--color-panel-light, #fafafa);
+  border-color: var(--color-text-muted-light, #6b7280);
 }
+
 .light-mode .btn-cancel:active {
-  background: #a94658;
-  color: var(--color-background);
+  background: var(--color-background-light, #ffffff);
 }
 .btn-field {
   background: #2196f3;

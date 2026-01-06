@@ -56,210 +56,230 @@
 
 
     <style>
-    /* Input Row - Refined Technical Aesthetic */
+    /* ============================================================
+       CHAT INPUT - Vercel/v0.dev Inspired Floating Design
+       ============================================================ */
+
+    /* Input Row - Floating design with subtle border, no visible inner background */
     .input-row {
       display: flex;
-      align-items: center;
-      gap: 0.75rem;
+      align-items: flex-end;
+      gap: var(--spacing-3, 0.75rem);
       width: 100%;
-      white-space: nowrap;
+      background: var(--color-background, #ffffff);
+      border: 1px solid var(--color-border, #e5e7eb);
+      border-radius: var(--radius-2xl, 24px);
+      padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
+      transition: all var(--transition-normal, 0.2s ease);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .input-row:focus-within {
+      border-color: var(--color-accent, #a855f7);
+      box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1), 0 2px 6px rgba(0, 0, 0, 0.08);
     }
 
     /* Attachments Icon + Tooltip */
     .attachment-wrapper {
       position: relative;
       flex-shrink: 0;
+      align-self: center;
     }
 
     .attachment-icon {
       cursor: pointer;
-      color: var(--color-text);
-      opacity: 0.6;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--color-text-muted, #9ca3af);
+      transition: all var(--transition-normal, 0.2s ease);
       display: flex;
       align-items: center;
-      padding: 0.5rem;
-      border-radius: 0.5rem;
+      padding: var(--spacing-2, 0.5rem);
+      border-radius: var(--radius-md, 12px);
     }
 
     .attachment-icon:hover {
-      opacity: 1;
-      background-color: var(--color-secondary);
-      color: var(--color-accent);
+      color: var(--color-text, #111827);
+      background-color: var(--color-background-hover, rgba(0, 0, 0, 0.04));
     }
 
     .attachment-icon:active {
-      opacity: 0.7;
       transform: scale(0.95);
     }
 
     .tooltip {
       position: absolute;
-      bottom: 100%;
+      bottom: calc(100% + 8px);
       left: 50%;
       transform: translateX(-50%);
-      padding: 0.5rem 0.75rem;
-      background-color: var(--color-panel);
-      color: var(--color-text);
-      border: 1px solid var(--color-border);
-      border-radius: 0.375rem;
-      font-size: 0.75rem;
+      padding: var(--spacing-2, 0.5rem) var(--spacing-3, 0.75rem);
+      background-color: var(--color-text, #111827);
+      color: var(--color-background, #ffffff);
+      border-radius: var(--radius-sm, 6px);
+      font-size: var(--font-size-xs, 0.75rem);
+      font-weight: var(--font-weight-medium, 500);
       white-space: nowrap;
       z-index: 1002;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: var(--shadow-lg);
     }
 
-/* Text Input - Refined Technical Aesthetic */
+    /* Text Input Container */
     #chat-input-container {
       position: relative;
-      width: 100%;
+      flex: 1;
+      min-width: 0;
     }
 
+    /* Text Input - Clean, Modern */
     #chat-input {
-      background-color: var(--color-input);
-      border: 2px solid var(--color-border);
-      border-radius: 0.75rem;
-      color: var(--color-text);
-      flex-grow: 1;
+      background-color: transparent;
+      border: none;
+      color: var(--color-text, #111827);
       font-family: var(--font-family-main);
-      font-size: 0.9375rem;
-      max-height: 7rem;
-      min-height: 3.25rem;
+      font-size: var(--font-size-base, 1rem);
+      line-height: var(--line-height-normal, 1.5);
+      max-height: 200px;
+      min-height: 24px;
       width: 100%;
-      padding: 0.875rem 3rem 0.875rem 1rem;
-      margin-right: 0.5rem;
+      padding: var(--spacing-2, 0.5rem) var(--spacing-8, 2rem) var(--spacing-2, 0.5rem) 0;
       overflow-y: auto;
-      scroll-behavior: smooth;
       resize: none;
-      align-content: start;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      line-height: 1.5;
+      transition: none;
     }
 
     #chat-input::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 4px;
     }
 
     #chat-input::-webkit-scrollbar-track {
       background: transparent;
-      margin: 4px 0;
-      border-radius: 0.375rem;
     }
 
     #chat-input::-webkit-scrollbar-thumb {
-      background-color: var(--color-border);
-      border-radius: 0.375rem;
-      transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    #chat-input::-webkit-scrollbar-thumb:hover {
-      background-color: var(--color-primary);
+      background-color: var(--color-border, #e5e7eb);
+      border-radius: var(--radius-full, 9999px);
     }
 
     #chat-input:focus {
       outline: none;
-      border-color: var(--color-accent);
-      background-color: var(--color-input-focus);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
     }
 
     #chat-input::placeholder {
-      color: var(--color-text-muted);
-      opacity: 0.6;
+      color: var(--color-text-muted, #9ca3af);
     }
 
     /* Expand Button */
     #expand-button {
       position: absolute;
-      top: 0.75rem;
-      right: 0.75rem;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
       background: transparent;
       border: none;
       cursor: pointer;
-      color: var(--color-text);
-      opacity: 0.5;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      padding: 0.25rem;
-      border-radius: 0.375rem;
+      color: var(--color-text-muted, #9ca3af);
+      transition: all var(--transition-normal, 0.2s ease);
+      padding: var(--spacing-1, 0.25rem);
+      border-radius: var(--radius-sm, 6px);
     }
 
     #expand-button:hover {
-      opacity: 1;
-      background-color: var(--color-secondary);
-    }
-
-    #expand-button:active {
-      opacity: 0.7;
-      transform: scale(0.95);
+      color: var(--color-text, #111827);
+      background-color: var(--color-background-hover, rgba(0, 0, 0, 0.04));
     }
 
     #expand-button svg {
-      width: 1.25rem;
-      height: 1.25rem;
+      width: 1.125rem;
+      height: 1.125rem;
     }
 
-    /* Chat Buttons (Send/Mic) - Refined Technical Aesthetic */
+    /* Chat Buttons Wrapper */
     #chat-buttons-wrapper {
-      gap: 0.5rem;
-      padding-left: 0.5rem;
       display: flex;
       align-items: center;
+      gap: var(--spacing-2, 0.5rem);
+      flex-shrink: 0;
     }
 
+    /* Chat Buttons - Circular with Gradient */
     .chat-button {
       border: none;
-      border-radius: 50%;
+      border-radius: var(--radius-full, 9999px);
       color: #ffffff;
       cursor: pointer;
-      height: 2.75rem;
-      width: 2.75rem;
+      height: 40px;
+      width: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all var(--transition-normal, 0.2s ease);
     }
 
+    /* Send Button - Professional Indigo */
     #send-button {
-      background: linear-gradient(135deg, var(--color-accent) 0%, #059669 100%);
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
     }
 
     #send-button:hover {
-      transform: scale(1.05) translateY(-1px);
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+      background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
     }
 
     #send-button:active {
       transform: scale(0.98);
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
     }
 
+    /* Microphone Button - Professional Slate */
     #microphone-button {
-      background: linear-gradient(135deg, var(--color-primary) 0%, #2563eb 100%);
+      background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+      box-shadow: 0 2px 8px rgba(100, 116, 139, 0.25);
     }
 
     #microphone-button:hover {
-      transform: scale(1.05) translateY(-1px);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(100, 116, 139, 0.35);
+      background: linear-gradient(135deg, #475569 0%, #334155 100%);
     }
 
     #microphone-button:active {
       transform: scale(0.98);
-      box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
     }
 
     .chat-button svg {
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 1.25rem;
+      height: 1.25rem;
     }
-    /* Responsive tweaks */
+
+    /* Dark Mode - Input blends with dark background */
+    .dark-mode .input-row {
+      background: var(--color-background, #131313);
+      border-color: var(--color-border, #444);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .dark-mode .input-row:focus-within {
+      border-color: var(--color-accent, #a855f7);
+      box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15), 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Responsive */
     @media (max-width: 640px) {
-      #chat-input { min-height: 5.3rem; align-content: start; }
-      #chat-buttons-wrapper { display: flex; gap: var(--spacing-xs); padding: 0 0 0 var(--spacing-sm) !important; width: 3.5rem; flex-wrap: wrap; -webkit-transition: all 0.3s ease; transition: all 0.3s ease; }
+      .input-row {
+        border-radius: var(--radius-lg, 16px);
+        padding: var(--spacing-2, 0.5rem);
+      }
+
+      .chat-button {
+        height: 36px;
+        width: 36px;
+      }
+
+      .chat-button svg {
+        width: 1.125rem;
+        height: 1.125rem;
+      }
     }
-    @media (min-width: 768px) { #chat-buttons-wrapper { flex-wrap: nowrap; -webkit-flex-wrap: nowrap; flex-wrap: nowrap; } }
     </style>
 </body>
 </html>
