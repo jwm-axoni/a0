@@ -23,7 +23,7 @@
         <!-- Container for textarea and expand button -->
         <div id="chat-input-container" style="position: relative;">
             <textarea id="chat-input" placeholder="Type your message here..." rows="1"
-+                     @keydown.enter="if (!$event.shiftKey && !$event.isComposing && $event.keyCode !== 229) { $event.preventDefault(); $store.chatInput.sendMessage(); }"
+                     @keydown.enter="if (!$event.shiftKey && !$event.isComposing && $event.keyCode !== 229) { $event.preventDefault(); $store.chatInput.sendMessage(); }"
                       @input="$store.chatInput.adjustTextareaHeight()"></textarea>
             <button id="expand-button" @click="$store.fullScreenInputModal.openModal()" aria-label="Expand input">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -305,4 +305,3 @@
     </style>
 </body>
 </html>
-
